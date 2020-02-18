@@ -8,7 +8,9 @@ const bodyParser = require("body-parser");
 const webpackConfig = require("./webpack.config");
 const models = require('./server/models');
 const Blogs = mongoose.model('blogs');
-const MONGO_URI = 'mongodb+srv://dbUser:********@cluster0-5dv6u.mongodb.net/blogDb?retryWrites=true&w=majority';
+const { dbUser, dbPassword, dbUrl } = require('./environment');
+
+const MONGO_URI = `mongodb+srv://${dbUser}:${dbPassword}@${dbUrl}?retryWrites=true&w=majority`;
 
 if (!MONGO_URI) {
   throw new Error("You must provide a MongoLab URI");
