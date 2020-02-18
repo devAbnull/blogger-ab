@@ -8,7 +8,23 @@ const bodyParser = require("body-parser");
 const webpackConfig = require("./webpack.config");
 const models = require('./server/models');
 const Blogs = mongoose.model('blogs');
-const { dbUser, dbPassword, dbUrl } = require('./environment');
+const { dbUser, dbPassword, dbUrl, port } = require('./environment');
+
+const { ApolloServer, gql } = require('apollo-server-express');
+
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+
+const resolvers = {
+  Query: {
+    hello: () => 'Hello world!',
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
 
 const MONGO_URI = `mongodb+srv://${dbUser}:${dbPassword}@${dbUrl}?retryWrites=true&w=majority`;
 
@@ -22,6 +38,8 @@ mongoose.connection
   .once("open", () => console.log("Connected to MongoLab instance."))
   .on("error", error => console.log("Error connecting to MongoLab:", error));
 
+  server.applyMiddleware({ app });
+
 app.use(bodyParser.json());
 
 // app.get('/addBlog', (req, res) => { test for adding blog
@@ -34,8 +52,13 @@ app.use(history());
 
 // app.use(webpackMiddleWare(webpack(webpackConfig)));
 
-app.listen(8000, () => {
-  console.log("Listening");
+app.listen(port, () => {
+  console.log(`Server Listening...\n
+  ****************************************
+   🌎   Go to http://localhost:${port}/ \n\n
+   🚀  GraphQL at http://localhost:${port}${server.graphqlPath}\n
+   ****************************************
+   `);
 });
 
 module.exports = app;
