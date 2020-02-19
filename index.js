@@ -7,22 +7,12 @@ const bodyParser = require("body-parser");
 
 const webpackConfig = require("./webpack.config");
 const models = require('./server/models');
+const { typeDefs } = require('./server/schema');
+const resolvers = require('./server/resolvers');
 const Blogs = mongoose.model('blogs');
 const { dbUser, dbPassword, dbUrl, port } = require('./environment');
 
 const { ApolloServer, gql } = require('apollo-server-express');
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
