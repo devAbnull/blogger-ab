@@ -7,6 +7,9 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+
 
 // routes
 import Blog from './pages/blog';
@@ -16,15 +19,12 @@ import CreateBlog from './pages/createBlog';
 
 import "./app.scss";
 
-// const App = props => {
-//   return <h1 className="bg-red flex justify-center">Hello World!</h1>;
-// };
+const client = new ApolloClient();
 
 function App() {
   return (
     <Router>
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+      <ApolloProvider client={client}>
         <Switch>
           <Route path="/blog">
             <Blog />
@@ -36,6 +36,7 @@ function App() {
             <Home />
           </Route>
         </Switch>
+      </ApolloProvider>
     </Router>
   );
 }

@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 
 app.use(history());
 
-// app.use(webpackMiddleWare(webpack(webpackConfig)));
+app.use(webpackMiddleWare(webpack(webpackConfig)));
 
 app.listen(port, () => {
   console.log(`Server Listening...\n
