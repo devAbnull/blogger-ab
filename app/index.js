@@ -29,6 +29,9 @@ function App() {
           <Route path="/blog">
             <Blog />
           </Route>
+          <Route path="/createBlog">
+            <CreateBlog />
+          </Route>
           <Route path="/blogList">
             <BlogList />
           </Route>
