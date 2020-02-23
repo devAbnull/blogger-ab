@@ -22,12 +22,12 @@ if (!MONGO_URI) {
 }
 const app = express();
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true });
-mongoose.connection
-  .once("open", () => console.log("Connected to MongoLab instance."))
-  .on("error", error => console.log("Error connecting to MongoLab:", error));
+// mongoose.connect(MONGO_URI, { useNewUrlParser: true });
+// mongoose.connection
+//   .once("open", () => console.log("Connected to MongoLab instance."))
+//   .on("error", error => console.log("Error connecting to MongoLab:", error));
 
-  server.applyMiddleware({ app });
+// server.applyMiddleware({ app });
 
 app.use(bodyParser.json());
 
