@@ -26,7 +26,7 @@ const client = new ApolloClient();
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: 'light',
     primary: blue,
   },
 });
