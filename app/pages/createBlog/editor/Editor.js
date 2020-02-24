@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 
 // Import the Slate editor factory.
 import { createEditor } from 'slate'
@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import { useTheme } from '@material-ui/core/styles';
 
-import { handleKeyDownEvent, EditorNodeType } from './helper';
+import { handleKeyDownEvent, EditorNodeType, serialize } from './helper';
 
 function CodeElement(props) {
   const theme = useTheme();
@@ -48,26 +48,32 @@ const renderLeaf = ({ attributes, children, leaf }) => {
 }
 
 function Editor(props) {
+  const { onChange } = props;
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: EditorNodeType.paragraph,
       children: [{ text: '' }],
     },
-  ])
+  ]);
+
   const handleKeyDown = useCallback(handleKeyDownEvent(editor), [editor]);
+  const handleChange = useCallback(val => {
+    setValue(val);
+    onChange(serialize(val));
+  }, [onChange]);
 
   return (
-      <Box ml={2} height={200} fontSize={16}>
-        <Slate editor={editor} value={value} onChange={value => setValue(value)}>
-          <Editable
-            placeholder="Enter fancy text…"
-            renderLeaf={renderLeaf}
-            renderElement={renderElement}
-            onKeyDown={handleKeyDown}
-          />
-        </Slate>
-      </Box>
+    <Box ml={2} height={200} fontSize={16}>
+      <Slate editor={editor} value={value} onChange={handleChange}>
+        <Editable
+          placeholder="Enter fancy text…"
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+          onKeyDown={handleKeyDown}
+        />
+      </Slate>
+    </Box>
 
   )
 }

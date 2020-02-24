@@ -1,4 +1,5 @@
-import { Editor, Transforms, Text, createEditor } from 'slate'
+import { Editor, Transforms, Text, createEditor } from 'slate';
+import escapeHtml from 'escape-html';
 
 export const EditorNodeType = {
   code: 'code',
@@ -44,4 +45,45 @@ export const handleKeyDownEvent = editor => event => {
       break;
     }
   }
+}
+
+const serializeNode = node => {
+  let text = node.text;
+  if (node.bold) {
+    text = `<strong>${text}</strong>`;
+  }
+
+  if (node.italic) {
+    text = `<em>${text}</em>`;
+  }
+
+  if (node.code) {
+    text = `<code>${text}</code>`;
+  }
+
+  if (Text.isText(node)) {
+    return text;
+  }
+}
+
+/**
+ * valid for simple array of nodes having children and type paragraph
+ *
+ * eg:
+ * [
+ *  ...
+ *  {
+ *    "type": "paragraph",
+ *     "children": [
+ *       {
+ *         "text": "some content",
+ *         "bold": true
+ *       },
+ *     ]
+ *   },
+ *   ...
+ * ]
+ */
+export const serialize = nodes => {
+  return nodes.map(n => `<p>${n.children.map(serializeNode).join('')}</p>`).join('');
 }

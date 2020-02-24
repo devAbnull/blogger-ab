@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 // formik
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFormik } from 'formik';
 
 // material ui
 import Grid from '@material-ui/core/Grid';
@@ -18,6 +18,9 @@ import { makeStyles } from "@material-ui/core/styles";
 // components
 import Editor from './editor';
 
+// serializer
+import { serialize, EditorNodeType } from './editor/helper';
+
 const useStyles = makeStyles(theme => ({
   form: {
     margin: theme.spacing(2),
@@ -28,9 +31,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const INITIAL_STATE = {
+  title: '',
+  content: [
+    {
+      type: EditorNodeType.paragraph,
+      children: [{ text: '' }],
+    },
+  ]
+};
+
 function CreateBlog() {
   const theme = useTheme();
   const classes = useStyles();
+  const { handleSubmit, values, handleChange, setValues } = useFormik({
+    initialValues: INITIAL_STATE,
+    onSubmit: (values, { }) => console.log('====>values ', values),
+  });
+
+  const handleContentValueChange = useCallback(val => setValues({
+    ...values,
+    content: val,
+  }), [values, setValues]);
+
   return (
     <Box display="flex" mt={3}>
       <Container maxWidth="md">
@@ -41,38 +64,34 @@ function CreateBlog() {
         </Box>
         <Paper>
           <Grid container>
-            <Formik initialValues={{ title: '', content: '' }} onSubmit={(values, { }) => console.log('====>values ', values)}>
-              {(props) => (
-                <form onSubmit={props.handleSubmit} autoComplete="off" style={{ width: '80%' }}>
-                  <Grid item xs={12}>
-                    <InputBase
-                      required
-                      fullWidth
-                      id="standard-basic"
-                      placeholder="Enter title here"
-                      name="title"
-                      variant="standard"
-                      className={`${classes.form} ${classes.title}`}
-                      value={props.values.title}
-                      onChange={props.handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Editor />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button
-                      type="submit"
-                      className={classes.form}
-                      variant="contained"
-                      color="primary"
-                    >
-                      Submit
+            <form onSubmit={handleSubmit} autoComplete="off" style={{ width: '80%' }}>
+              <Grid item xs={12}>
+                <InputBase
+                  required
+                  fullWidth
+                  id="standard-basic"
+                  placeholder="Enter title here"
+                  name="title"
+                  variant="standard"
+                  className={`${classes.form} ${classes.title}`}
+                  value={values.title}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Editor onChange={handleContentValueChange} />
+              </Grid>
+              <Grid item xs={3}>
+                <Button
+                  type="submit"
+                  className={classes.form}
+                  variant="contained"
+                  color="primary"
+                >
+                  Submit
                 </Button>
-                  </Grid>
-                </form>
-              )}
-            </Formik>
+              </Grid>
+            </form>
           </Grid>
         </Paper>
       </Container>
