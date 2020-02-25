@@ -18,8 +18,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // components
 import Editor from './editor';
 
-// serializer
-import { serialize, EditorNodeType } from './editor/helper';
+import useAddBlog from './useAddBlog';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -33,12 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const INITIAL_STATE = {
   title: '',
-  content: [
-    {
-      type: EditorNodeType.paragraph,
-      children: [{ text: '' }],
-    },
-  ]
+  content: '',
 };
 
 function CreateBlog() {
@@ -46,8 +40,9 @@ function CreateBlog() {
   const classes = useStyles();
   const { handleSubmit, values, handleChange, setValues } = useFormik({
     initialValues: INITIAL_STATE,
-    onSubmit: (values, { }) => console.log('====>values ', values),
+    onSubmit: (values, { }) => addBlog(values),
   });
+  const { addBlog } = useAddBlog();
 
   const handleContentValueChange = useCallback(val => setValues({
     ...values,
