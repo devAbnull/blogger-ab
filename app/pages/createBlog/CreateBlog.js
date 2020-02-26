@@ -42,7 +42,7 @@ function CreateBlog() {
     initialValues: INITIAL_STATE,
     onSubmit: (values, { }) => addBlog(values),
   });
-  const { addBlog } = useAddBlog();
+  const { addBlog, loading } = useAddBlog();
 
   const handleContentValueChange = useCallback(val => setValues({
     ...values,
@@ -82,6 +82,7 @@ function CreateBlog() {
                   className={classes.form}
                   variant="contained"
                   color="primary"
+                  disabled={!!loading}
                 >
                   Submit
                 </Button>

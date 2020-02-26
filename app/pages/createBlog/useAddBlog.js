@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
@@ -11,13 +11,14 @@ const ADD_BLOG_MUTATION = gql`
 `;
 
 export default function useAddBlog() {
-  const [addBlog, { data }] = useMutation(ADD_BLOG_MUTATION);
+  const [addBlog, { data, loading }] = useMutation(ADD_BLOG_MUTATION);
   const handleAddBlog = useCallback(values => {
-    addBlog({variables: values });
+    addBlog({ variables: values });
   }, []);
 
   return {
     addBlog: handleAddBlog,
-    data
+    data,
+    loading
   }
 }
