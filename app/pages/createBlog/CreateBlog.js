@@ -50,11 +50,11 @@ function CreateBlog() {
   }), [values, setValues]);
 
   return (
-    <Box display="flex" mt={3}>
+    <Box display="flex" mt={4}>
       <Container maxWidth="md">
-        <Box ml={2} mb={2}>
+        <Box mb={2} display="flex" jsutifyContent="center" >
           <Typography variant="h5" component="h5">
-            creating new blog a simpler way
+            New Blog content
           </Typography>
         </Box>
         <Paper>

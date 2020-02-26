@@ -21,6 +21,7 @@ import CreateBlog from './pages/createBlog';
 // material-ui
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import blue from '@material-ui/core/colors/blue';
@@ -44,10 +45,17 @@ function App() {
   return (
     <ThemeProvider theme={MuiTheme}>
       <CssBaseline />
-      <Box display="flex" justifyContent="flex-end" alignItems="center" mt={3} mr={10}>
-        <AntSwitch onChange={onThemeSwitch} />
-        <Typography variant="body2">Enable Dark Mode!</Typography>
-      </Box>
+      <AppBar color="transparent" position="static">
+        <Box display="flex" my={2.5} mr={10} ml={8} alignItems="center" >
+          <Typography variant="h6">
+            blogger AB
+          </Typography>
+          <Box ml="auto" display="flex">
+            <AntSwitch onChange={onThemeSwitch} />
+            <Typography variant="body2">Enable Dark Mode!</Typography>
+          </Box>
+        </Box>
+      </AppBar>
       <Router>
         <ApolloProvider client={client}>
           <Switch>
