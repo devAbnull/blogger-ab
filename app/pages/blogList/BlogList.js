@@ -16,6 +16,7 @@ const BLOGS_QUERY = gql`query BlogsQuery {
   blogs {
     id
     title
+    summary
   }
 }
 `;
@@ -27,15 +28,16 @@ function useBlogsQuery() {
   }
 }
 
-function BlogSummary({ id, title }) {
+function BlogSummary({ id, title, summary }) {
   return (
-    <Box display="flex" flexDirection="column">
-      <ListItem>
-        <ListItemText primary={title} />
-        {/* <hr /> */}
-      </ListItem>
-      <Divider variant="middle" />
-    </Box>
+    <ListItem divider>
+      <Box display="flex" flexDirection="column">
+        <ListItemText
+          primary={<Typography variant="h5">{title}</Typography>}
+          secondary={<div dangerouslySetInnerHTML={{__html: `${summary}...` }} />}
+        />
+      </Box>
+    </ListItem>
   );
 }
 
