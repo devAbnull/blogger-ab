@@ -1,9 +1,14 @@
 import React from "react";
-import { useQuery} from 'react-apollo';
 
+// material-ui
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
+// graphql
+import { useQuery } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
-const BLOGS_QUERY = gql`query {
+const BLOGS_QUERY = gql`query BlogsQuery {
   blogs {
     id
     title
@@ -11,10 +16,30 @@ const BLOGS_QUERY = gql`query {
 }
 `;
 
+function useBlogsQuery() {
+  const { data = {} } = useQuery(BLOGS_QUERY);
+  return {
+    blogs: data.blogs,
+  }
+}
+
+function BlogSummary({ id, title }) {
+  return (
+    <Box display="flex">
+      <Typography variant="h6" gutterBottom>
+        {title}
+      </Typography>
+    </Box>
+  );
+}
+
 function BlogList() {
-  const { data } = useQuery(BLOGS_QUERY);
-  console.log('=====> blog list', data);
-  return <h2>BlogList</h2>;
+  const { blogs = [] } = useBlogsQuery();
+  return (
+    <Box display="flex" flexDirection="column" alignItems="center" mt={5}>
+      {blogs.map(blog => <BlogSummary key={blog.id} {...blog} />)}
+    </Box>
+  );
 }
 
 export default BlogList;
