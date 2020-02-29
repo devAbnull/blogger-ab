@@ -5,6 +5,7 @@ const typeDefs = gql`
     id: String
     title: String
     content: String
+    summary: String
     createdOn: Int
   }
 

@@ -2,6 +2,15 @@ const mongoose = require('mongoose');
 require('./models');
 const Blogs = mongoose.model('blogs');
 
+function adaptBlogToSave({ title, content, createdOn }) {
+  return {
+    title,
+    content,
+    createdOn,
+    summary: content.slice(0, 140),
+  }
+}
+
 const resolvers = {
   Query: {
     blogs: async () => await Blogs.find({}),
@@ -14,7 +23,7 @@ const resolvers = {
   },
 
   Mutation: {
-    addBlog: async (root, args) => await (new Blogs(args)).save(),
+    addBlog: async (root, args) => await (new Blogs(adaptBlogToSave(args))).save(),
     deleteBlog: async (root, { id }) => await Blogs.findOneAndDelete({ _id: id }),
   }
 };
