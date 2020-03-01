@@ -4,16 +4,11 @@ import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 import Box from '@material-ui/core/Box';
-import { useTheme } from '@material-ui/core/styles';
 
 import { handleKeyDownEvent, EditorNodeType, serialize } from './helper';
 
 function CodeElement(props) {
-  const theme = useTheme();
-  const style = useMemo(() => ({
-    backgroundColor: theme.palette.divider,
-  }), [theme]);
-  return <code style={style} {...props.attributes}>{props.children}</code>
+  return <code {...props.attributes}>{props.children}</code>
 }
 
 function renderElement({ type, children, attributes }) {

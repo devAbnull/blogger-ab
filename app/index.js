@@ -25,6 +25,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import blue from '@material-ui/core/colors/blue';
+import { makeStyles } from "@material-ui/core/styles";
 
 // components
 import AntSwitch from './components/antSwtich';
@@ -32,24 +33,32 @@ import "./app.scss";
 
 const client = new ApolloClient();
 
-function App() {
-  const [theme, setTheme] = useState('light');
-  const MuiTheme = useMemo(() => createMuiTheme({
-    palette: {
-      type: theme,
-      primary: blue,
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    code: {
+      backgroundColor: theme.palette.divider,
+      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     },
-  }));
-  const onThemeSwitch = useCallback(e => setTheme(e.target.checked ? 'dark' : 'light'));
+    a: {
+      color: theme.palette.text.primary,
+      textDecoration: 'none',
+    }
+  },
+}));
+
+
+function App(props) {
+  const classes = useStyles();
+  const { onThemeSwitch } = props;
 
   return (
-    <ThemeProvider theme={MuiTheme}>
-      <CssBaseline />
+    <>
+      <CssBaseline classes={classes} />
       <AppBar color="transparent" position="static">
         <Box display="flex" my={2.5} mr={10} ml={8} alignItems="center" >
           <Typography variant="h6">
             blogger AB
-          </Typography>
+        </Typography>
           <Box ml="auto" display="flex">
             <AntSwitch onChange={onThemeSwitch} />
             <Typography variant="body2">Enable Dark Mode!</Typography>
@@ -74,8 +83,24 @@ function App() {
           </Switch>
         </ApolloProvider>
       </Router>
-    </ThemeProvider>
+    </>
   );
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+function AppWithTheme() {
+  const [theme, setTheme] = useState('light');
+  const MuiTheme = useMemo(() => createMuiTheme({
+    palette: {
+      type: theme,
+      primary: blue,
+    },
+  }));
+  const onThemeSwitch = useCallback(e => setTheme(e.target.checked ? 'dark' : 'light'));
+  return (
+    <ThemeProvider theme={MuiTheme}>
+      <App onThemeSwitch={onThemeSwitch} />
+    </ThemeProvider>
+  )
+}
+
+ReactDOM.render(<AppWithTheme />, document.querySelector("#root"));

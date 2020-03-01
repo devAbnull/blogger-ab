@@ -4,3 +4,7 @@ yarn.lock
 yarn-error.log
 dist/
 environment.js
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
