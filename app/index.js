@@ -21,6 +21,8 @@ import CreateBlog from './pages/createBlog';
 // material-ui
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -44,6 +46,14 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'none',
     }
   },
+  extendedIcon: {
+    right: 75,
+    bottom: 100,
+    position: 'absolute',
+  },
+  root: {
+    position: 'relative',
+  }
 }));
 
 
@@ -82,6 +92,11 @@ function App(props) {
             </Route>
           </Switch>
         </ApolloProvider>
+        <Link to="/createBlog">
+          <Fab color="primary" aria-label="add" className={classes.extendedIcon}>
+            <AddIcon />
+          </Fab>
+        </Link>
       </Router>
     </>
   );
