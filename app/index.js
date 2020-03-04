@@ -64,40 +64,42 @@ function App(props) {
   return (
     <>
       <CssBaseline classes={classes} />
+
       <AppBar color="transparent" position="static">
         <Box display="flex" my={2.5} mr={10} ml={8} alignItems="center" >
-          <Typography variant="h6">
-            blogger AB
-        </Typography>
+          <Link to="/">
+            <Typography variant="h6">
+              blogger AB
+            </Typography>
+          </Link>
           <Box ml="auto" display="flex">
             <AntSwitch onChange={onThemeSwitch} />
             <Typography variant="body2">Enable Dark Mode!</Typography>
           </Box>
         </Box>
       </AppBar>
-      <Router>
-        <ApolloProvider client={client}>
-          <Switch>
-            <Route path="/blog">
-              <Blog />
-            </Route>
-            <Route path="/createBlog">
-              <CreateBlog />
-            </Route>
-            <Route path="/blogList">
+      <ApolloProvider client={client}>
+        <Switch>
+          <Route path="/blog">
+            <Blog />
+          </Route>
+          <Route path="/createBlog">
+            <CreateBlog />
+          </Route>
+          {/* <Route path="/blogList">
               <BlogList />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </ApolloProvider>
-        <Link to="/createBlog">
-          <Fab color="primary" aria-label="add" className={classes.extendedIcon}>
-            <AddIcon />
-          </Fab>
-        </Link>
-      </Router>
+            </Route> */}
+          <Route path="/">
+            <BlogList />
+          </Route>
+        </Switch>
+      </ApolloProvider>
+      <Link to="/createBlog">
+        <Fab color="primary" aria-label="add" className={classes.extendedIcon}>
+          <AddIcon />
+        </Fab>
+      </Link>
+
     </>
   );
 }
@@ -113,7 +115,9 @@ function AppWithTheme() {
   const onThemeSwitch = useCallback(e => setTheme(e.target.checked ? 'dark' : 'light'));
   return (
     <ThemeProvider theme={MuiTheme}>
-      <App onThemeSwitch={onThemeSwitch} />
+      <Router>
+        <App onThemeSwitch={onThemeSwitch} />
+      </Router>
     </ThemeProvider>
   )
 }
