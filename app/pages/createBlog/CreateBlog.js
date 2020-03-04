@@ -59,7 +59,7 @@ function CreateBlog() {
         </Box>
         <Paper>
           <Grid container>
-            <form onSubmit={handleSubmit} autoComplete="off" style={{ width: '80%' }}>
+            <form onSubmit={handleSubmit} autoComplete="off" style={{ width: '100%' }}>
               <Grid item xs={12}>
                 <InputBase
                   required

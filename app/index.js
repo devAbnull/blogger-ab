@@ -64,7 +64,6 @@ function App(props) {
   return (
     <>
       <CssBaseline classes={classes} />
-
       <AppBar color="transparent" position="static">
         <Box display="flex" my={2.5} mr={10} ml={8} alignItems="center" >
           <Link to="/">

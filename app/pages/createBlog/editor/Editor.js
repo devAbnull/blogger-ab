@@ -57,13 +57,14 @@ function Editor(props) {
   }, [onChange]);
 
   return (
-    <Box ml={2} height={200} fontSize={16}>
+    <Box ml={2} height={300} fontSize={16} overflow="auto">
       <Slate editor={editor} value={value} onChange={handleChange}>
         <Editable
           placeholder="Enter fancy text…"
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           onKeyDown={handleKeyDown}
+          style={{minHeight: '270px'}}
         />
       </Slate>
     </Box>
