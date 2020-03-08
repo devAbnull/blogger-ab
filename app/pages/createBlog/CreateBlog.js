@@ -21,6 +21,7 @@ import Alert from '@material-ui/lab/Alert';
 import Editor from './editor';
 
 import useAddBlog from './useAddBlog';
+import useFormAlert from './useFormAlert';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -37,25 +38,16 @@ const INITIAL_STATE = {
   content: '',
 };
 
-function getAlert(error, data) {
-  if (error) {
-    return { type: 'error', message: 'Sorry! could not save the blog', show: true };
-  }
-  if (data) {
-    return { type: 'success', message: 'Blog was successfully saved.', show: true };
-  }
-  return { show: false };
-}
 
 function CreateBlog() {
   const theme = useTheme();
   const classes = useStyles();
+  const { addBlog, loading, error, data } = useAddBlog();
   const { handleSubmit, values, handleChange, setValues } = useFormik({
     initialValues: INITIAL_STATE,
     onSubmit: (values, { }) => addBlog(values),
   });
-  const { addBlog, loading, error, data } = useAddBlog();
-  const { type: alertType, message: alertMessage, show: showAlert } = getAlert(error, data);
+  const { alertType, alertMessage, shouldShowAlert, closeAlert } = useFormAlert({ error, data });
 
   const handleContentValueChange = useCallback(val => setValues({
     ...values,
@@ -103,8 +95,8 @@ function CreateBlog() {
             </form>
           </Grid>
         </Paper>
-        <Snackbar open={showAlert} autoHideDuration={6000}>
-          <Alert elevation={6} variant="filled" severity={alertType}>
+        <Snackbar open={shouldShowAlert} autoHideDuration={3000} onClose={closeAlert}>
+          <Alert elevation={6} severity={alertType}>
             {alertMessage}
           </Alert>
         </Snackbar>
