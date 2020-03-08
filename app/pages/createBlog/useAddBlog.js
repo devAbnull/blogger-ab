@@ -11,7 +11,7 @@ const ADD_BLOG_MUTATION = gql`
 `;
 
 export default function useAddBlog() {
-  const [addBlog, { data, loading }] = useMutation(ADD_BLOG_MUTATION);
+  const [addBlog, { data, loading, error }] = useMutation(ADD_BLOG_MUTATION);
   const handleAddBlog = useCallback(values => {
     addBlog({ variables: values });
   }, []);
@@ -19,6 +19,7 @@ export default function useAddBlog() {
   return {
     addBlog: handleAddBlog,
     data,
-    loading
+    loading,
+    error
   }
 }

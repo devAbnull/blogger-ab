@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 // components
 import Editor from './editor';
@@ -35,6 +37,16 @@ const INITIAL_STATE = {
   content: '',
 };
 
+function getAlert(error, data) {
+  if (error) {
+    return { type: 'error', message: 'Sorry! could not save the blog', show: true };
+  }
+  if (data) {
+    return { type: 'success', message: 'Blog was successfully saved.', show: true };
+  }
+  return { show: false };
+}
+
 function CreateBlog() {
   const theme = useTheme();
   const classes = useStyles();
@@ -42,7 +54,8 @@ function CreateBlog() {
     initialValues: INITIAL_STATE,
     onSubmit: (values, { }) => addBlog(values),
   });
-  const { addBlog, loading } = useAddBlog();
+  const { addBlog, loading, error, data } = useAddBlog();
+  const { type: alertType, message: alertMessage, show: showAlert } = getAlert(error, data);
 
   const handleContentValueChange = useCallback(val => setValues({
     ...values,
@@ -90,6 +103,11 @@ function CreateBlog() {
             </form>
           </Grid>
         </Paper>
+        <Snackbar open={showAlert} autoHideDuration={6000}>
+          <Alert elevation={6} variant="filled" severity={alertType}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </Container>
     </Box>
   );
