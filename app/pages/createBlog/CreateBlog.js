@@ -45,7 +45,7 @@ function CreateBlog() {
   const { addBlog, loading, error, data } = useAddBlog();
   const { handleSubmit, values, handleChange, setValues } = useFormik({
     initialValues: INITIAL_STATE,
-    onSubmit: (values, { }) => addBlog(values),
+    onSubmit: (values, { }) => addBlog({ ...values, createdOn: new Date().getTime() }),
   });
   const { alertType, alertMessage, shouldShowAlert, closeAlert } = useFormAlert({ error, data });
 

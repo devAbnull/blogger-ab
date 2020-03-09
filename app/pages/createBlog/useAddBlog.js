@@ -3,8 +3,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
 const ADD_BLOG_MUTATION = gql`
-  mutation AddBlog($title: String, $content:String) {
-    addBlog(title: $title, content:$content) {
+  mutation AddBlog($title: String, $content:String, $createdOn: Date) {
+    addBlog(title: $title, content:$content, createdOn: $createdOn) {
       id
     }
   }
