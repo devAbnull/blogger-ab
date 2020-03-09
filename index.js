@@ -3,6 +3,8 @@ const webpack = require("webpack");
 const webpackMiddleWare = require("webpack-dev-middleware");
 const history = require('connect-history-api-fallback');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const https = require('https');
 const bodyParser = require("body-parser");
 
 const webpackConfig = require("./webpack.config");
@@ -35,7 +37,12 @@ app.use(history());
 
 app.use(webpackMiddleWare(webpack(webpackConfig)));
 
-app.listen(port, () => {
+https.createServer({
+  key: fs.readFileSync('./key.pem'),
+  cert: fs.readFileSync('./cert.pem'),
+  passphrase: 'devAB'
+}, app)
+.listen(port, () => {
   console.log(`Server Listening...\n
   ****************************************
    🌎   Go to http://localhost:${port}/ \n\n
