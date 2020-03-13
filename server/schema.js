@@ -12,7 +12,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    blogs: [Blog]
+    blogs(pageNo: Int, size: Int): [Blog]
     blog(id: String, title: String, createdOn: Date) : Blog
   }
 

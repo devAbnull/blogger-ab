@@ -25,7 +25,10 @@ const resolvers = {
   }),
 
   Query: {
-    blogs: async () => await Blogs.find({}).sort({ createdOn: -1 }),
+    blogs: async (root, args) => await Blogs.find({})
+      .sort({ createdOn: -1 })
+      .skip(args.size * (args.pageNo - 1))
+      .limit(args.size),
     blog: async (root, { id, ...args }) => {
       if (id) {
         return await Blogs.findById(id);
