@@ -1,11 +1,27 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SourceMapDevToolPlugin = require("webpack").SourceMapDevToolPlugin;
+const { isDebug } = require('./environment');
+const TerserPlugin = require('terser-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
   entry: "./app/index.js",
+  ...(!isDebug && { mode: 'production' }),
   output: {
     path: __dirname + "/dist",
     filename: "index_bundle.js"
+  },
+  optimization: {
+    splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
+		}
   },
   module: {
     rules: [
@@ -29,6 +45,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html"
     }),
-    new SourceMapDevToolPlugin({})
+    ...(isDebug ? [new SourceMapDevToolPlugin({})] : []),
+    ...(isDebug ? [new BrotliPlugin()]: []),
   ]
 };
