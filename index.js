@@ -9,13 +9,23 @@ const bodyParser = require("body-parser");
 
 const webpackConfig = require("./webpack.config");
 const { typeDefs } = require('./server/schema');
+const { AuthDirective } = require('./server/schemaDirectives');
 const resolvers = require('./server/resolvers');
 const Blogs = mongoose.model('blogs');
-const { dbUser, dbPassword, dbUrl, port } = require('./environment');
+const { dbUser, dbPassword, dbUrl, port, adminPassword } = require('./environment');
 
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer, gql, SchemaDirectiveVisitor } = require('apollo-server-express');
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    auth: AuthDirective,
+  },
+  context: ({ req }) => {
+    return { authorization: req.headers.authorization };
+  },
+});
 
 const MONGO_URI = `mongodb+srv://${dbUser}:${dbPassword}@${dbUrl}?retryWrites=true&w=majority`;
 
@@ -34,7 +44,10 @@ server.applyMiddleware({ app });
 app.use(bodyParser.json());
 
 app.use(history());
-
+app.post('/admin/auth', bodyParser.urlencoded({ extended: false }), function (req, res) {
+  const isAdminAuthenticated = req.body.password === adminPassword;
+  res.send({ isAdminAuthenticated });
+});
 app.use(webpackMiddleWare(webpack(webpackConfig)));
 
 https.createServer({
@@ -42,13 +55,13 @@ https.createServer({
   cert: fs.readFileSync('./cert.pem'),
   passphrase: 'devAB'
 }, app)
-.listen(port, () => {
-  console.log(`Server Listening...\n
+  .listen(port, () => {
+    console.log(`Server Listening...\n
   ****************************************
    🌎   Go to http://localhost:${port}/ \n\n
    🚀  GraphQL at http://localhost:${port}${server.graphqlPath}\n
    ****************************************
    `);
-});
+  });
 
 module.exports = app;

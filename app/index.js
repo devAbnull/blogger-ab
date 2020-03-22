@@ -1,5 +1,5 @@
 // libraries
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo, useContext } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
@@ -15,8 +15,8 @@ import { ApolloProvider } from 'react-apollo';
 // routes
 import Blog from './pages/blog';
 import BlogList from './pages/blogList';
-import Home from './pages/home';
 import CreateBlog from './pages/createBlog';
+import AdminDesk from './pages/adminDesk';
 
 // material-ui
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -31,9 +31,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // components
 import AntSwitch from './components/antSwtich';
+import { AuthProvider, AuthContext } from './context/AuthContext';
 import "./app.scss";
-
-const client = new ApolloClient();
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -59,6 +58,17 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const classes = useStyles();
+  const { user } = useContext(AuthContext);
+  const client = useMemo(() => new ApolloClient({
+    request: operation => {
+      operation.setContext({
+        headers: {
+          authorization: user,
+        }
+      })
+    }
+  }), [user]);
+
   const { onThemeSwitch } = props;
 
   return (
@@ -72,7 +82,7 @@ function App(props) {
             </Typography>
           </Link>
           <Box ml="auto" display="flex">
-            <AntSwitch onChange={onThemeSwitch} />
+            <AntSwitch onChange={onThemeSwitch} checked={props.theme === 'dark'} />
             <Typography variant="body2">Enable Dark Mode!</Typography>
           </Box>
         </Box>
@@ -85,9 +95,9 @@ function App(props) {
           <Route path="/createBlog">
             <CreateBlog />
           </Route>
-          {/* <Route path="/blogList">
-              <BlogList />
-            </Route> */}
+          <Route path="/admin">
+            <AdminDesk />
+          </Route>
           <Route path="/">
             <BlogList />
           </Route>
@@ -104,7 +114,7 @@ function App(props) {
 }
 
 function AppWithTheme() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
   const MuiTheme = useMemo(() => createMuiTheme({
     palette: {
       type: theme,
@@ -114,9 +124,11 @@ function AppWithTheme() {
   const onThemeSwitch = useCallback(e => setTheme(e.target.checked ? 'dark' : 'light'));
   return (
     <ThemeProvider theme={MuiTheme}>
-      <Router>
-        <App onThemeSwitch={onThemeSwitch} />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <App onThemeSwitch={onThemeSwitch} theme={theme} />
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

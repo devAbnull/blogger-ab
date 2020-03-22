@@ -56,7 +56,7 @@ function BlogList() {
   return (
     <Box display="flex" flexDirection="column" mx={30} mt={5}>
       <List>
-        {blogs.map(blog => <BlogSummary key={blog.id} {...blog} />)}
+        {blogs && blogs.map(blog => <BlogSummary key={blog.id} {...blog} />)}
       </List>
     </Box>
   );

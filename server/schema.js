@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  directive @auth on FIELD_DEFINITION
   scalar Date
 
   type Blog {
@@ -17,9 +18,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addBlog(title: String, createdOn: Date, content: String): Blog
-    deleteBlog(id: String): Blog
-    updateBlog(id: String, title: String, createdOn: Date, content: String): Blog
+    addBlog(title: String, createdOn: Date, content: String): Blog @auth
+    deleteBlog(id: String): Blog @auth
+    updateBlog(id: String, title: String, createdOn: Date, content: String): Blog @auth
   }
 `;
 
