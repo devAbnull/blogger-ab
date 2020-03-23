@@ -20,7 +20,7 @@ function renderElement({ type, children, attributes }) {
     case EditorNodeType.italic:
       return <em {...attributes}>{children}</em>;
     default:
-      return <p {...attributes}>{children}</p>;
+      return <div {...attributes}>{children}</div>;
   }
 }
 
