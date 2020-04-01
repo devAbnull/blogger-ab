@@ -9,7 +9,7 @@ import useSearchParam from 'react-use/lib/useSearchParam';
 
 const useStyles = makeStyles({
   root: {
-    fontSize: 16,
+    fontSize: 20,
   },
 });
 
@@ -39,7 +39,7 @@ function Blog() {
 
   return blog ?
     <Box mx={30} mt={5}>
-      <Typography variant="h5">{blog.title}</Typography>
+      <Typography variant="h3">{blog.title}</Typography>
       <Box mt={5}>
         <div className={classes.root} dangerouslySetInnerHTML={{ __html: blog.content }} />
       </Box>

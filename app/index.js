@@ -39,10 +39,15 @@ const useStyles = makeStyles(theme => ({
     code: {
       backgroundColor: theme.palette.divider,
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+      fontSize: '17px',
+      padding: '1px 2px',
     },
     a: {
       color: theme.palette.text.primary,
       textDecoration: 'none',
+    },
+    body: {
+      fontFamily: 'AtlasGrotesk-editor-rtl,AtlasGrotesk-editor,NotoSansCJKjp-editor,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif',
     }
   },
   extendedIcon: {
