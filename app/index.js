@@ -13,10 +13,11 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
 // routes
-import Blog from './pages/blog';
+const Blog = React.lazy((() => import(/* webpackChunkName: "blog" */ './pages/blog')));
+// const BlogList = React.lazy((() => import(/* webpackChunkName: "blogList" */'./pages/blogList')));
 import BlogList from './pages/blogList';
-import CreateBlog from './pages/createBlog';
-import AdminDesk from './pages/adminDesk';
+const CreateBlog = React.lazy((() => import(/* webpackChunkName: "createBlog" */'./pages/createBlog')));
+const AdminDesk = React.lazy((() => import(/* webpackChunkName: "adminDesk" */'./pages/adminDesk')));
 
 // material-ui
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -32,6 +33,9 @@ import { makeStyles } from "@material-ui/core/styles";
 // components
 import AntSwitch from './components/antSwtich';
 import { AuthProvider, AuthContext } from './context/AuthContext';
+
+import useTransition from './hooks/useTransition';
+
 import "./app.scss";
 
 const useStyles = makeStyles(theme => ({
@@ -60,6 +64,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function Body(props) {
+  return (
+    <>
+    <ApolloProvider client={props.client}>
+        <Switch>
+          <Route path="/blog">
+            <React.Suspense fallback="Loading Blog">
+              <Blog />
+            </React.Suspense>
+          </Route>
+          <Route path="/createBlog">
+            <React.Suspense fallback="Loading Form">
+              <CreateBlog />
+            </React.Suspense>
+          </Route>
+          <Route path="/admin">
+            <React.Suspense fallback="Loading Admin Desk">
+              <AdminDesk />
+            </React.Suspense>
+          </Route>
+          <Route path="/">
+            <BlogList />
+          </Route>
+        </Switch>
+      </ApolloProvider>
+      <Link to="/createBlog">
+        <Fab color="primary" aria-label="add" className={props.classes.extendedIcon}>
+          <AddIcon />
+        </Fab>
+      </Link>
+    </>
+  )
+}
 
 function App(props) {
   const classes = useStyles();
@@ -75,6 +112,7 @@ function App(props) {
   }), [user]);
 
   const { onThemeSwitch } = props;
+  const show = useTransition(0);
 
   return (
     <>
@@ -92,28 +130,7 @@ function App(props) {
           </Box>
         </Box>
       </AppBar>
-      <ApolloProvider client={client}>
-        <Switch>
-          <Route path="/blog">
-            <Blog />
-          </Route>
-          <Route path="/createBlog">
-            <CreateBlog />
-          </Route>
-          <Route path="/admin">
-            <AdminDesk />
-          </Route>
-          <Route path="/">
-            <BlogList />
-          </Route>
-        </Switch>
-      </ApolloProvider>
-      <Link to="/createBlog">
-        <Fab color="primary" aria-label="add" className={classes.extendedIcon}>
-          <AddIcon />
-        </Fab>
-      </Link>
-
+      {show ? <Body client={client} classes={classes} />: null}
     </>
   );
 }

@@ -48,8 +48,15 @@ app.post('/admin/auth', bodyParser.urlencoded({ extended: false }), function (re
   const isAdminAuthenticated = req.body.password === adminPassword;
   res.send({ isAdminAuthenticated });
 });
-app.use(webpackMiddleWare(webpack(webpackConfig)));
+app.get('*.js', function(req, res, next) {
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  res.set('Content-Type', 'text/javascript');
+  res.set('Cache-Control', 'public,max-age=31536000');
+  next();
+});
 
+app.use(webpackMiddleWare(webpack(webpackConfig)));
 https.createServer({
   key: fs.readFileSync('./key.pem'),
   cert: fs.readFileSync('./cert.pem'),

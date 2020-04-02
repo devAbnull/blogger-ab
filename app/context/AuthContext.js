@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import $ from 'jquery';
+import { ajax } from 'jquery';
 // import request from 'superagent-bluebird-promise';
 
 export const AuthContext = React.createContext({});
@@ -11,7 +11,7 @@ export const USER_TYPES = {
 
 function authenticateUser(password) {
   return new Promise((resolve, reject) => {
-    $.ajax({
+    ajax({
       url: `${window.location.href}/auth`,
       type: 'POST',
       data: {
